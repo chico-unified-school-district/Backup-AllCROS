@@ -17,20 +17,17 @@
 
 [cmdletbinding()]
 param (
- [Parameter(Position=0,Mandatory=$True)]
+ [Parameter(Position = 0, Mandatory = $True)]
  [string]$BackupRoot,
- [Parameter(Position=1,Mandatory=$True)]
+ [Parameter(Position = 1, Mandatory = $True)]
  [System.Management.Automation.PSCredential]$ShareCred,
  [switch]$WhatIf
 )
 
-CLS;$error.clear() # Clear Screen and $error
+CLS; $error.clear() # Clear Screen and $error
 
 # Variables
 $driveName = "Backup"
-
-# Imported Functions
-# Functions
 
 # Processing
 Get-PSDrive -Name $driveName -ErrorAction SilentlyContinue | Remove-PSDrive
@@ -60,16 +57,17 @@ Compress-Archive -Path $backupFilePath -DestinationPath ".\BackupTemp\$archiveNa
 if (Test-Path "$DriveName`:") {
  "Moving $backupFilePath to $BackupRoot"
  Move-Item -Path ".\BackupTemp\$archiveName" -Destination "$DriveName`:"
-} else { "[WARNING] Archive not moved. $BackupRoot not available." }
+}
+else { "[WARNING] Archive not moved. $BackupRoot not available." }
 
 "Removing $backupFilePath..."
 Remove-Item -Path $backupFilePath -Force -Confirm:$false
 
-if (Test-Path "$DriveName`:") { $BackupFolders = ".\BackupTemp","$driveName`:" }
+if (Test-Path "$DriveName`:") { $BackupFolders = ".\BackupTemp", "$driveName`:" }
 else { $BackupFolders = ".\BackupTemp" }
 "Removing old backup .zip and .csv files..."
 $deleteOlderThanDate = (Get-Date).AddDays(-30)
-$oldBackups = Get-ChildItem $BackupFolders | Where-Object{ ($_.LastWriteTime -le $deleteOlderThanDate) -and 
+$oldBackups = Get-ChildItem $BackupFolders | Where-Object { ($_.LastWriteTime -le $deleteOlderThanDate) -and 
  ( ($_.name -like "*.zip") -or ($_.name -like "*.csv") ) }
 $oldBackups | Remove-Item -Force -Confirm:$false
 
