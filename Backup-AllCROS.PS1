@@ -33,7 +33,7 @@ $driveName = "Backup"
 Get-PSDrive -Name $driveName -ErrorAction SilentlyContinue | Remove-PSDrive
 "Adding a trailing \ to the $BackupRoot will cause New-PSSdrive to error."
 "Connecting to $BackupRoot with $($ShareCred.Username)"
-New-PSDrive -Name $driveName -PSProvider FileSystem -Root $BackupRoot -Credential $ShareCred -ErrorAction SilentlyContinue
+New-PSDrive -Name $driveName -PSProvider FileSystem -Root $BackupRoot -Credential $ShareCred -ErrorAction SilentlyContinue > $null
 
 if ( (Test-Path -Path .\BackupTemp) -eq $false ) { New-Item -Name BackupTemp -ItemType Directory }
 if ( (Test-Path "$DriveName`:") -eq $false ) { "[WARNING] $BackupRoot not available" }
