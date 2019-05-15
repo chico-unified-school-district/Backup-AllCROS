@@ -1,6 +1,4 @@
-<#
-This command can be dot sourced and used in scripts or it can be referenced directly
-#>
+# This command can be dot sourced and used in scripts or it can be referenced directly
 [CmdletBinding()]
 param (
  # Username for credential object
