@@ -27,6 +27,7 @@ param (
 CLS; $error.clear() # Clear Screen and $error
 
 # Variables
+$ENV:GAM_DEVICE_MAX_RESULTS = 100
 $driveName = "Backup"
 
 # Processing
