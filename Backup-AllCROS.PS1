@@ -63,7 +63,7 @@ $archiveName = "CROS-Backup-$(Get-Date -f yyyy-MM-dd-mmss).zip"
 $localArchiveZipFilePath = ".\BackupTemp\$archiveName"
 "Compressing $localBackupCSVFilePath to $localArchiveZipFilePath"
 
-.\lib\7z.exe a -mx=9 $localArchiveZipFilePath $localBackupCSVFilePath
+.\lib\7za.exe a -mx=9 $localArchiveZipFilePath $localBackupCSVFilePath
 # Compress-Archive -Path $backupFilePath -DestinationPath ".\BackupTemp\$archiveName" -CompressionLevel Optimal
 
 if (Test-Path "$DriveName`:") {
