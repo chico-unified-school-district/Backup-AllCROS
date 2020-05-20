@@ -26,6 +26,8 @@ param (
 
 # CLS; $error.clear() # Clear Screen and $error
 Get-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB
+Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 4096
+Get-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB
 
 # Variables
 $ENV:GAM_DEVICE_MAX_RESULTS = 100
