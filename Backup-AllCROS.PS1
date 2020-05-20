@@ -36,36 +36,44 @@ Get-PSDrive -Name $driveName -ErrorAction SilentlyContinue | Remove-PSDrive
 "Connecting to $BackupRoot with $($ShareCred.Username)"
 New-PSDrive -Name $driveName -PSProvider FileSystem -Root $BackupRoot -Credential $ShareCred -ErrorAction SilentlyContinue > $null
 
-if ( (Test-Path -Path .\BackupTemp) -eq $false ) { New-Item -Name BackupTemp -ItemType Directory }
-if ( (Test-Path "$DriveName`:") -eq $false ) { "[WARNING] $BackupRoot not available" }
-
-($backUpTempFileName = "CROS-BACKUP-$(Get-Date -f yyyy-MM-dd-mmss).csv")
-$backupFilePath = ".\BackupTemp\$backUpTempFileName"
-
 if ($WhatIf) { $allCros = 10..1 } 
 else {
  "Retrieving all CRoS devices..."
  ($allCros = .\lib\gam-64\gam.exe print cros allfields) *>$null # *>$null Suppresses gam.exe output.
 }
 
-"Exporting allCros to $backupFilePath"
-$allCros | Out-File $backupFilePath
+'CrOS Results: {0}' -f $allCros.count
+# read-host
+
+'Checking local backup directory'
+if ( (Test-Path -Path .\BackupTemp) -eq $false ) { New-Item -Name BackupTemp -ItemType Directory }
+if ( (Test-Path "$DriveName`:") -eq $false ) { "[WARNING] $BackupRoot not available" }
+
+'Setting local backup csv file name and path'
+($backUpCSVFileName = "CROS-BACKUP-$(Get-Date -f yyyy-MM-dd-mmss).csv")
+$localBackupCSVFilePath = ".\BackupTemp\$backUpCSVFileName"
+
+"Exporting allCros to $localBackupCSVFilePath"
+$allCros | Out-File $localBackupCSVFilePath
 
 'Clearing allCros variable'
 $allCros = $null
 
 $archiveName = "CROS-Backup-$(Get-Date -f yyyy-MM-dd-mmss).zip"
-"Compressing $backupFilePath to $archiveName"
-Compress-Archive -Path $backupFilePath -DestinationPath ".\BackupTemp\$archiveName" -CompressionLevel Optimal
+$localArchiveZipFilePath = ".\BackupTemp\$archiveName"
+"Compressing $localBackupCSVFilePath to $localArchiveZipFilePath"
+
+.\lib\7z.exe a -mx=9 $localArchiveZipFilePath $localBackupCSVFilePath
+# Compress-Archive -Path $backupFilePath -DestinationPath ".\BackupTemp\$archiveName" -CompressionLevel Optimal
 
 if (Test-Path "$DriveName`:") {
- "Moving $backupFilePath to $BackupRoot"
- Move-Item -Path ".\BackupTemp\$archiveName" -Destination "$DriveName`:"
+ "Moving $localArchiveZipFilePath to $BackupRoot `($DriveName`:`)"
+ Move-Item -Path $localArchiveZipFilePath -Destination "$DriveName`:"
 }
 else { "[WARNING] Archive not moved. $BackupRoot not available." }
 
-"Removing $backupFilePath..."
-Remove-Item -Path $backupFilePath -Force -Confirm:$false
+"Removing local backup files..."
+Remove-Item -Path $localBackupCSVFilePath -Force -Confirm:$false
 
 if (Test-Path "$DriveName`:") { $BackupFolders = ".\BackupTemp", "$driveName`:" }
 else { $BackupFolders = ".\BackupTemp" }
