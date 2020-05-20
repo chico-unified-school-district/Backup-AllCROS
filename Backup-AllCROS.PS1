@@ -24,7 +24,8 @@ param (
  [switch]$WhatIf
 )
 
-CLS; $error.clear() # Clear Screen and $error
+# CLS; $error.clear() # Clear Screen and $error
+Get-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB
 
 # Variables
 $ENV:GAM_DEVICE_MAX_RESULTS = 100
@@ -50,6 +51,9 @@ else {
 
 "Exporting allCros to $backupFilePath"
 $allCros | Out-File $backupFilePath
+
+'Clearing allCros variable'
+$allCros = $null
 
 $archiveName = "CROS-Backup-$(Get-Date -f yyyy-MM-dd-mmss).zip"
 "Compressing $backupFilePath to $archiveName"
