@@ -26,7 +26,7 @@ param (
 
 # CLS; $error.clear() # Clear Screen and $error
 Get-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB
-Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 4294967294
+Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 2147483647
 Get-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB
 
 # Variables
