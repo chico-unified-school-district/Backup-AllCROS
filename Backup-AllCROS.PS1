@@ -3,6 +3,7 @@
 .SYNOPSIS
  Dumps all Chrome OS device data into a text file, compresses the file, and moves it to a remote server
 .DESCRIPTION
+This mght need to be deprecated
 .EXAMPLE
  Backup-AllCROS.ps1 -BackupRoot "\\ServerName\Share" -ShareCred $CredentialObject
 .EXAMPLE
