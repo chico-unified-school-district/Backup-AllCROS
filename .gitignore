@@ -15,3 +15,5 @@ log/*
 test/log/*
 logs/*
 test/logs/*
+/jenkins.ps1
+/notes.ps1
