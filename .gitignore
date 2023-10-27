@@ -18,5 +18,11 @@ test/logs/*
 /jenkins.ps1
 /notes.ps1
 /lib/gam-64/oauth2service.json
+*oauth2service.json
 /lib/gam-64/client_secrets.json
+*client_secrets.json
 /lib/gam-64/roots.pem
+*roots.pem
+*gam.exe
+*oauth2.txt
+/params.ps1
