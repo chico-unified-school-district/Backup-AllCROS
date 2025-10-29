@@ -20,6 +20,7 @@ param (
 
 function Get-CrosDevices {
  begin {
+  $ErrorActionPreference = “Continue”
   $fields = @(
    'deviceId'
    'serialNumber'
@@ -37,9 +38,12 @@ function Get-CrosDevices {
  process {
   Write-Host ('{0},{1}' -f $MyInvocation.MyCommand.Name, (Get-Date)) -F Green
   # ($activeCros = C:\GAM7\gam.exe info cros ac425222-6796-4709-b33a-d473c87c7e4b fields $fields) *> $null
-  ($activeCros = C:\GAM7\gam.exe print cros query 'status:ACTIVE' fields $fields 2>&1) *> $null
+  ($activeCros = C:\GAM7\gam.exe print cros query 'status:ACTIVE' fields $fields) 2>$null
   'CrOS Results: {0}' -f @($activeCros).count
   $activeCros
+ }
+ end {
+  $ErrorActionPreference = "Stop"
  }
 }
 
@@ -62,3 +66,5 @@ $deleteOlderThanDate = (Get-Date).AddDays(-30)
 $oldBackups = Get-ChildItem $BackupFolders | Where-Object { ($_.LastWriteTime -le $deleteOlderThanDate) -and
  ( ($_.name -like '*.zip') -or ($_.name -like '*.csv') ) }
 $oldBackups | Remove-Item -Force -Confirm:$false
+
+Write-Host ('{0},{1},Script End' -f $MyInvocation.MyCommand.Name, (Get-Date)) -F Green
