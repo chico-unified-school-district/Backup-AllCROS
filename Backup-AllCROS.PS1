@@ -25,10 +25,8 @@ param (
  [switch]$WhatIf
 )
 
-# CLS; $error.clear() # Clear Screen and $error
-
 # Variables
-$driveName = "Backup"
+$driveName = 'Backup'
 
 # Processing
 Get-PSDrive -Name $driveName -ErrorAction SilentlyContinue | Remove-PSDrive
@@ -38,12 +36,12 @@ New-PSDrive -Name $driveName -PSProvider FileSystem -Root $BackupRoot -Credentia
 
 if ($WhatIf) { $allCros = 10..1 }
 else {
- "Retrieving all CRoS devices..."
- ($allCros = C:\GAM7\gam.exe print cros allfields) *>$null # *>$null Suppresses gam.exe output.
+ 'Retrieving all CRoS devices...'
+ try { ($allCros = C:\GAM7\gam.exe print cros allfields) *>$null }
+ catch { Write-Error "Error retrieving CROS devices: $_"; $($_.Exception.Message) }
 }
 
 'CrOS Results: {0}' -f $allCros.count
-# read-host
 
 'Checking local backup directory'
 if ( (Test-Path -Path .\BackupTemp) -eq $false ) { New-Item -Name BackupTemp -ItemType Directory }
@@ -72,15 +70,15 @@ if (Test-Path "$DriveName`:") {
 }
 else { "[WARNING] Archive not moved. $BackupRoot not available." }
 
-"Removing local backup files..."
+'Removing local backup files...'
 Remove-Item -Path $localBackupCSVFilePath -Force -Confirm:$false
 
-if (Test-Path "$DriveName`:") { $BackupFolders = ".\BackupTemp", "$driveName`:" }
-else { $BackupFolders = ".\BackupTemp" }
-"Removing old backup .zip and .csv files..."
+if (Test-Path "$DriveName`:") { $BackupFolders = '.\BackupTemp', "$driveName`:" }
+else { $BackupFolders = '.\BackupTemp' }
+'Removing old backup .zip and .csv files...'
 $deleteOlderThanDate = (Get-Date).AddDays(-30)
 $oldBackups = Get-ChildItem $BackupFolders | Where-Object { ($_.LastWriteTime -le $deleteOlderThanDate) -and
- ( ($_.name -like "*.zip") -or ($_.name -like "*.csv") ) }
+ ( ($_.name -like '*.zip') -or ($_.name -like '*.csv') ) }
 $oldBackups | Remove-Item -Force -Confirm:$false
 
 if (Test-Path "$DriveName`:") {
