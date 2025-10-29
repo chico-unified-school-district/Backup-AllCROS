@@ -20,7 +20,7 @@ param (
 
 function Get-CrosDevices {
  begin {
-  $ErrorActionPreference = “Continue”
+  $ErrorActionPreference = 'Continue'
   $fields = @(
    'deviceId'
    'serialNumber'
@@ -43,7 +43,7 @@ function Get-CrosDevices {
   $activeCros
  }
  end {
-  $ErrorActionPreference = "Stop"
+  $ErrorActionPreference = 'Stop'
  }
 }
 
