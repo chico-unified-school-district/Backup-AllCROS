@@ -1,5 +1,5 @@
 #Requires -Version 5.0
-<# 
+<#
 .SYNOPSIS
  Dumps all Chrome OS device data into a text file, compresses the file, and moves it to a remote server
 .DESCRIPTION
@@ -28,7 +28,6 @@ param (
 # CLS; $error.clear() # Clear Screen and $error
 
 # Variables
-$ENV:GAM_DEVICE_MAX_RESULTS = 100
 $driveName = "Backup"
 
 # Processing
@@ -37,10 +36,10 @@ Get-PSDrive -Name $driveName -ErrorAction SilentlyContinue | Remove-PSDrive
 "Connecting to $BackupRoot with $($ShareCred.Username)"
 New-PSDrive -Name $driveName -PSProvider FileSystem -Root $BackupRoot -Credential $ShareCred -ErrorAction SilentlyContinue > $null
 
-if ($WhatIf) { $allCros = 10..1 } 
+if ($WhatIf) { $allCros = 10..1 }
 else {
  "Retrieving all CRoS devices..."
- ($allCros = .\lib\gam-64\gam.exe print cros allfields) *>$null # *>$null Suppresses gam.exe output.
+ ($allCros = C:\GAM7\gam.exe print cros allfields) *>$null # *>$null Suppresses gam.exe output.
 }
 
 'CrOS Results: {0}' -f $allCros.count
@@ -80,7 +79,7 @@ if (Test-Path "$DriveName`:") { $BackupFolders = ".\BackupTemp", "$driveName`:" 
 else { $BackupFolders = ".\BackupTemp" }
 "Removing old backup .zip and .csv files..."
 $deleteOlderThanDate = (Get-Date).AddDays(-30)
-$oldBackups = Get-ChildItem $BackupFolders | Where-Object { ($_.LastWriteTime -le $deleteOlderThanDate) -and 
+$oldBackups = Get-ChildItem $BackupFolders | Where-Object { ($_.LastWriteTime -le $deleteOlderThanDate) -and
  ( ($_.name -like "*.zip") -or ($_.name -like "*.csv") ) }
 $oldBackups | Remove-Item -Force -Confirm:$false
 
